@@ -7,17 +7,47 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from core.adapters import get_messaging, get_pms  # noqa: E402
+from core.config import load_settings  # noqa: E402
 from core.review import approve, reject, stale_backlog  # noqa: E402
+from core.store import Store  # noqa: E402
 
 from tools.engine import DEFAULT_DISCLOSURE, process_order  # noqa: E402
 from tools.review import cmd_send  # noqa: E402
 
 DEMO_TODAY = "2026-09-01"
+
+
+@pytest.fixture
+def settings_and_store(tmp_path):
+    """`tests/conftest.py`'s autouse `_isolated_repo` fixture sandboxes
+    AGENT_CONFIG_DIR / AGENT_REPO_ROOT for every test here; this file-local
+    fixture only builds the (settings, store) pair this module's tests
+    share - `demo=True` forces mock provider, shadow mode and mock
+    adapters regardless of the sandboxed config content."""
+    settings = load_settings(demo=True)
+    store = Store(settings, path=tmp_path / "test.db")
+    yield settings, store
+    store.close()
+
+
+@pytest.fixture
+def live_settings_and_store(tmp_path, monkeypatch):
+    """Same sandbox, but real (non-demo) settings in `mode: live` with the
+    `mock` adapters still in force - the only way to test the real send
+    path (`tools/review.py send`), a guarded write `mode: shadow` blocks
+    outright."""
+    monkeypatch.setenv("LLM_PROVIDER", "mock")
+    settings = load_settings(provider="mock", mode="live")
+    store = Store(settings, path=tmp_path / "test-live.db")
+    yield settings, store
+    store.close()
 
 
 def _clean_order(settings, store):
@@ -66,10 +96,15 @@ def test_reject_is_terminal_and_never_reaches_send(settings_and_store):
 def test_live_send_never_duplicates_the_disclosure_line(live_settings_and_store):
     # tools/engine.py:draft() already appended the disclosure before this
     # item ever reached the queue; messaging.send()'s own with_disclosure()
-    # call must be a no-op on the way out, not a second copy.
+    # call must be a no-op on the way out, not a second copy. Check against
+    # whatever line actually applies - the hotel's own translated
+    # knowledge/disclosure.md if it exists, DEFAULT_DISCLOSURE otherwise -
+    # not the English literal, so this still passes once a hotel translates
+    # the file (tools/engine.py:_disclosed() resolves the line the same way).
     settings, store = live_settings_and_store
+    disclosure_line = get_messaging(settings).disclosure() or DEFAULT_DISCLOSURE
     item = _clean_order(settings, store)
-    assert item.draft["guest_message"].count(DEFAULT_DISCLOSURE) == 1
+    assert item.draft["guest_message"].count(disclosure_line) == 1
     approve(store, item.id)
     code = cmd_send(store, settings, SimpleNamespace(limit=20))
     assert code == 0
@@ -77,7 +112,7 @@ def test_live_send_never_duplicates_the_disclosure_line(live_settings_and_store)
     sent = [json.loads(line) for line in outbox.read_text(encoding="utf-8").splitlines()]
     guest_sends = [row for row in sent if row["kind"] == "guest"]
     assert guest_sends, "expected the guest confirmation to have been logged"
-    assert guest_sends[0]["text"].count(DEFAULT_DISCLOSURE) == 1
+    assert guest_sends[0]["text"].count(disclosure_line) == 1
 
 
 def test_stale_clears_the_shadow_era_queue_at_go_live(settings_and_store):

@@ -5,6 +5,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -16,6 +18,19 @@ from tools.engine import get_upsell_enabled, set_upsell_enabled  # noqa: E402
 from tools.run import one_pass  # noqa: E402
 
 DEMO_TODAY = "2026-09-01"
+
+
+@pytest.fixture
+def settings_and_store(tmp_path):
+    """`tests/conftest.py`'s autouse `_isolated_repo` fixture sandboxes
+    AGENT_CONFIG_DIR / AGENT_REPO_ROOT for every test here; this file-local
+    fixture only builds the (settings, store) pair this module's tests
+    share - `demo=True` forces mock provider, shadow mode and mock
+    adapters regardless of the sandboxed config content."""
+    settings = load_settings(demo=True)
+    store = Store(settings, path=tmp_path / "test.db")
+    yield settings, store
+    store.close()
 
 
 def test_one_pass_processes_all_twelve_and_reports_needs_human(settings_and_store):

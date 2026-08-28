@@ -7,15 +7,32 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from core.adapters import get_messaging, get_pms  # noqa: E402
+from core.config import load_settings  # noqa: E402
+from core.store import Store  # noqa: E402
 
 from tools.engine import DEFAULT_DISCLOSURE, process_order  # noqa: E402
 
 DEMO_TODAY = "2026-09-01"
+
+
+@pytest.fixture
+def settings_and_store(tmp_path):
+    """`tests/conftest.py`'s autouse `_isolated_repo` fixture sandboxes
+    AGENT_CONFIG_DIR / AGENT_REPO_ROOT for every test here; this file-local
+    fixture only builds the (settings, store) pair this module's tests
+    share - `demo=True` forces mock provider, shadow mode and mock
+    adapters regardless of the sandboxed config content."""
+    settings = load_settings(demo=True)
+    store = Store(settings, path=tmp_path / "test.db")
+    yield settings, store
+    store.close()
 
 EXPECTED_STATUS = {
     "order-01": "pending_review", "order-02": "pending_review",
@@ -100,11 +117,16 @@ def test_demo_confirmation_always_carries_the_ai_disclosure_line(settings_and_st
     pms = get_pms(settings)
     msg = next(m for m in _messages(settings) if m.id == "order-01")
     item, _ = process_order(settings, store, pms, msg, provider="mock", today=DEMO_TODAY)
-    # `_isolated_repo` only carries knowledge/disclosure.example.md, exactly
-    # what a fresh clone ships - so this also proves the shipped generic
-    # default is what makes the line appear, not a per-test fixture.
-    assert DEFAULT_DISCLOSURE in item.draft["guest_message"]
-    assert item.draft["guest_message"].count(DEFAULT_DISCLOSURE) == 1
+    # Check against whatever line actually applies - a hotel that has
+    # translated knowledge/disclosure.md (the isolated repo root copies a
+    # hotel's own knowledge/ wholesale, translation included) gets their own
+    # line here, not DEFAULT_DISCLOSURE; only a fresh clone with no
+    # disclosure.md yet falls back to the English default. Asserting the
+    # English literal would break the moment a hotel translates the file -
+    # tools/engine.py:_disclosed() resolves the line the same way.
+    disclosure_line = get_messaging(settings).disclosure() or DEFAULT_DISCLOSURE
+    assert disclosure_line in item.draft["guest_message"]
+    assert item.draft["guest_message"].count(disclosure_line) == 1
 
 
 def test_gated_order_confirmation_also_carries_the_disclosure_line(settings_and_store):
@@ -116,7 +138,10 @@ def test_gated_order_confirmation_also_carries_the_disclosure_line(settings_and_
     msg = next(m for m in _messages(settings) if m.id == "order-05")
     item, _ = process_order(settings, store, pms, msg, provider="mock", today=DEMO_TODAY)
     assert item.review_status == "needs_human"
-    assert DEFAULT_DISCLOSURE in item.draft["guest_message"]
+    # Same dynamic check as above - the hotel's own translated line if one
+    # exists, DEFAULT_DISCLOSURE only when knowledge/disclosure.md is absent.
+    disclosure_line = get_messaging(settings).disclosure() or DEFAULT_DISCLOSURE
+    assert disclosure_line in item.draft["guest_message"]
 
 
 def test_not_an_order_never_gets_a_disclosure_line_on_an_empty_message(settings_and_store):

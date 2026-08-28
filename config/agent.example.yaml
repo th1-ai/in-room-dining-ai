@@ -6,6 +6,18 @@
 # always wins), never looser - see core/config.py.
 # ---------------------------------------------------------------------------
 
+# Which of pms/email/messaging this agent actually READS from - narrows the
+# "sample data" warning (core.adapters.sample_data_warning) to the adapters
+# that matter here. The Butler reads guest messages (`messaging.fetch_new`
+# - tools/run.py, tools/demo.py) and looks up the room's reservation
+# (`pms.get_reservation` / `pms.list_in_house` - tools/engine.py) to resolve
+# the guest's name and reply language, so both count. It never calls
+# `get_email()` - In-Room Dining AI has no email channel at all (orders
+# arrive over chat, not a mailbox) - so leaving `systems.email.adapter:
+# mock` in hotel.yaml is never a sample-data signal for this agent. See
+# docs/integrations.md.
+systems_used: [pms, messaging]
+
 # The menu. This is data, not code (docs/how-it-works.md "Design decisions"
 # #1) - add, remove or reprice items here and the next run picks it up.
 # `slug` is what the extraction step matches guest text against; keep it
