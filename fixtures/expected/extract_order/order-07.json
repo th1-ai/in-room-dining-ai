@@ -1,0 +1,10 @@
+{
+  "is_order": true,
+  "language": "en",
+  "items": [
+    {"slug": "", "raw_text": "a chicken caesar wrap", "quantity": 1},
+    {"slug": "", "raw_text": "a coke", "quantity": 1}
+  ],
+  "dietary_note": "",
+  "confidence": 0.6
+}

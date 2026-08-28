@@ -1,0 +1,132 @@
+# ---------------------------------------------------------------------------
+# agent.yaml - In-Room Dining AI's own knobs.
+#
+# `make setup` copies this file to config/agent.yaml. Edit THAT one.
+# Anything here may only make hotel.yaml STRICTER (e.g. mode: shadow here
+# always wins), never looser - see core/config.py.
+# ---------------------------------------------------------------------------
+
+# The menu. This is data, not code (docs/how-it-works.md "Design decisions"
+# #1) - add, remove or reprice items here and the next run picks it up.
+# `slug` is what the extraction step matches guest text against; keep it
+# stable once guests start ordering, or an in-flight order can go unmatched.
+menu:
+  - slug: club-sandwich
+    name: "Club sandwich"
+    category: "All-day kitchen"
+    price: 28
+    description: "Chicken, bacon, tomato, triple-decker, fries on the side"
+  - slug: house-burger
+    name: "House burger"
+    category: "All-day kitchen"
+    price: 32
+    description: "Beef, cheddar, pickles, fries on the side"
+  - slug: caesar
+    name: "Caesar salad"
+    category: "All-day kitchen"
+    price: 24
+    description: "Romaine, parmesan, anchovy dressing, add chicken +8"
+  - slug: margherita
+    name: "Margherita pizza"
+    category: "All-day kitchen"
+    price: 22
+    description: "Tomato, mozzarella, basil"
+  - slug: sea-bass
+    name: "Grilled sea bass"
+    category: "All-day kitchen"
+    price: 42
+    description: "Line-caught, lemon butter, seasonal greens"
+  - slug: continental
+    name: "Continental breakfast"
+    category: "Morning"
+    price: 24
+    description: "Pastries, fruit, yoghurt, juice, coffee or tea"
+  - slug: fruit-plate
+    name: "Fruit plate"
+    category: "Morning"
+    price: 14
+    description: "Whatever came off the market this morning"
+  - slug: fondant
+    name: "Chocolate fondant"
+    category: "Desserts"
+    price: 16
+    description: "Warm, molten centre, twelve minutes, worth it"
+  - slug: custard-tart
+    name: "Custard tart"
+    category: "Desserts"
+    price: 9
+    description: "Two, still warm, with cinnamon"
+  - slug: house-white
+    name: "House white wine, bottle"
+    category: "Drinks"
+    price: 38
+    description: "Crisp, dry, chilled"
+  - slug: sparkling-water
+    name: "Sparkling water"
+    category: "Drinks"
+    price: 6
+    description: "750 ml, chilled"
+  - slug: espresso
+    name: "Espresso"
+    category: "Drinks"
+    price: 6
+    description: "Double shot"
+
+# Kitchen and delivery. docs/how-it-works.md "Design decisions" #2 - this is
+# the implementation of the roster's cant: "kitchen capacity rules cap what
+# it promises".
+kitchen:
+  tray_charge: 8            # added once per non-empty order, hotel currency
+  eta_base_minutes: 35      # quoted ETA with no backlog
+  capacity_before_delay: 4  # tickets currently placed/preparing before the
+                             # quoted ETA starts growing
+  delay_step_minutes: 10    # extra minutes added per ticket over capacity
+  max_eta_minutes: 75       # the ETA never grows past this - escalate
+                             # instead of quoting something absurd
+  sold_out: ["sea-bass"]    # menu slugs the kitchen has pulled for today.
+                             # Example only - clear it, or edit it yourself
+                             # each morning, or wire your own inventory feed.
+
+# The upsell. Seed value only - the LIVE value lives in data/agent.db and is
+# changed with `tools/run.py --set-rule upsell=on|off`, matching Table /
+# Floor Management AI's dining_rules (docs/how-it-works.md "Design decisions"
+# #9). Never quotes an attach-rate figure until it has real data to compute
+# one from (tools/report.py).
+upsell:
+  enabled: true
+  target_slug: "fondant"       # must be a slug in menu: above
+  category: "Desserts"          # dedup: skip the offer if the cart already
+                                 # has an item in this category
+  min_orders_for_stat: 5        # do not quote an attach rate before this
+                                 # many completed orders exist
+
+# Below this, extract_order's own confidence score queues the item as
+# needs_human instead of trusting the parse - independent of the dietary,
+# sold-out and unmatched-item gates, which always escalate regardless of
+# confidence.
+confidence_threshold: 0.55
+
+# In-Room Dining AI never sends on its own by default - every order, clean or
+# not, waits for a person (docs/how-it-works.md "Nothing fires a ticket
+# without a person"). This is not a switch that turns autonomy on; it
+# documents the choice for tools/report.py. The real gate is mode: shadow in
+# config/hotel.yaml plus review.require_approval_for, both enforced by
+# core/review.py. A hotel that wants a lower-friction path for a fully clean
+# order (no gates fired at all) can set this to "send" once mode: live has
+# been exercised - core.review.resolve_autonomy still forces "draft" the
+# instant any gate fires, whatever this says.
+autonomy: draft
+
+# This agent's own review requirements - overrides hotel.yaml's list for
+# this agent. In-Room Dining AI never sends email and never takes a payment
+# directly, so those defaults are dropped.
+review:
+  require_approval_for: [send_message, pms_write, sheets_write]
+
+# Every recurring job this agent runs. `make schedule ARGS="--all"` prints
+# one ready-to-install snippet per entry - see README section 9. Orders are
+# time-sensitive, so this polls far more often than an email inbox does.
+schedule:
+  take_orders:
+    command: "tools/run.py --once"
+    cadence: "every-5-min"

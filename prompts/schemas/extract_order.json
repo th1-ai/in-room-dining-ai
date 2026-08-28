@@ -1,0 +1,47 @@
+{
+  "type": "object",
+  "properties": {
+    "is_order": {
+      "type": "boolean"
+    },
+    "language": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "raw_text": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          }
+        },
+        "required": ["slug", "raw_text", "quantity"],
+        "additionalProperties": false
+      }
+    },
+    "dietary_note": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "required": ["is_order", "language", "items", "dietary_note", "confidence"],
+  "additionalProperties": false
+}

@@ -1,0 +1,10 @@
+{
+  "is_order": true,
+  "language": "en",
+  "items": [
+    {"slug": "house-burger", "raw_text": "the house burger", "quantity": 1},
+    {"slug": "house-white", "raw_text": "a bottle of the house white", "quantity": 1}
+  ],
+  "dietary_note": "",
+  "confidence": 0.93
+}

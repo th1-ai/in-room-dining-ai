@@ -1,0 +1,9 @@
+{
+  "is_order": true,
+  "language": "fr",
+  "items": [
+    {"slug": "house-burger", "raw_text": "le burger", "quantity": 1}
+  ],
+  "dietary_note": "sans gluten",
+  "confidence": 0.9
+}

@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "guest_message": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1200
+    },
+    "kitchen_ticket_line": {
+      "type": "string",
+      "maxLength": 300
+    }
+  },
+  "required": ["guest_message", "kitchen_ticket_line"],
+  "additionalProperties": false
+}

@@ -1,0 +1,9 @@
+{
+  "is_order": true,
+  "language": "it",
+  "items": [
+    {"slug": "margherita", "raw_text": "la pizza margherita", "quantity": 1}
+  ],
+  "dietary_note": "senza glutine, ho la celiachia",
+  "confidence": 0.9
+}

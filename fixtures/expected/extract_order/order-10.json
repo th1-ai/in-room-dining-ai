@@ -1,0 +1,9 @@
+{
+  "is_order": true,
+  "language": "sv",
+  "items": [
+    {"slug": "espresso", "raw_text": "en espresso", "quantity": 1}
+  ],
+  "dietary_note": "",
+  "confidence": 0.8
+}

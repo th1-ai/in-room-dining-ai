@@ -1,0 +1,9 @@
+{
+  "is_order": true,
+  "language": "en",
+  "items": [
+    {"slug": "sea-bass", "raw_text": "the grilled sea bass", "quantity": 1}
+  ],
+  "dietary_note": "",
+  "confidence": 0.92
+}

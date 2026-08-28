@@ -1,0 +1,9 @@
+{
+  "is_order": true,
+  "language": "es",
+  "items": [
+    {"slug": "margherita", "raw_text": "la pizza margherita", "quantity": 1}
+  ],
+  "dietary_note": "tengo una alergia",
+  "confidence": 0.85
+}

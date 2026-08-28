@@ -1,0 +1,122 @@
+[
+  {
+    "id": "204", "external_ref": "HA-7001", "status": "confirmed",
+    "check_in": "2026-08-30", "check_out": "2026-09-03",
+    "room_type_id": "double", "room_type_name": "Double", "room_id": "204",
+    "adults": 2, "children": 0, "source": "Direct", "total": 480.0, "balance": 480.0,
+    "currency": "EUR",
+    "guest": {"id": "g-204", "first_name": "Owen", "last_name": "Bright",
+      "email": "owen.bright@example.com", "phone": "+1 555 0121", "country": "GB",
+      "language": "en", "vip": false}
+  },
+  {
+    "id": "210", "external_ref": "HA-7002", "status": "confirmed",
+    "check_in": "2026-08-29", "check_out": "2026-09-02",
+    "room_type_id": "double", "room_type_name": "Double", "room_id": "210",
+    "adults": 2, "children": 1, "source": "Booking.com", "total": 690.0, "balance": 690.0,
+    "currency": "EUR",
+    "guest": {"id": "g-210", "first_name": "Priya", "last_name": "Desai",
+      "email": "priya.desai@example.com", "phone": "+1 555 0133", "country": "GB",
+      "language": "en", "vip": false}
+  },
+  {
+    "id": "118", "external_ref": "HA-7003", "status": "confirmed",
+    "check_in": "2026-08-31", "check_out": "2026-09-04",
+    "room_type_id": "twin", "room_type_name": "Twin", "room_id": "118",
+    "adults": 2, "children": 0, "source": "Direct", "total": 420.0, "balance": 420.0,
+    "currency": "EUR",
+    "guest": {"id": "g-118", "first_name": "Camille", "last_name": "Fontaine",
+      "email": "camille.fontaine@example.com", "phone": "+33 6 55 01 44", "country": "FR",
+      "language": "fr", "vip": false}
+  },
+  {
+    "id": "227", "external_ref": "HA-7004", "status": "confirmed",
+    "check_in": "2026-08-28", "check_out": "2026-09-05",
+    "room_type_id": "suite", "room_type_name": "Suite", "room_id": "227",
+    "adults": 2, "children": 0, "source": "Direct", "total": 1400.0, "balance": 1400.0,
+    "currency": "EUR",
+    "guest": {"id": "g-227", "first_name": "Marta", "last_name": "Iglesias",
+      "email": "marta.iglesias@example.com", "phone": "+34 611 22 33 44", "country": "ES",
+      "language": "es", "vip": false}
+  },
+  {
+    "id": "322", "external_ref": "HA-7005", "status": "confirmed",
+    "check_in": "2026-08-30", "check_out": "2026-09-02",
+    "room_type_id": "double", "room_type_name": "Double", "room_id": "322",
+    "adults": 2, "children": 0, "source": "Expedia", "total": 480.0, "balance": 480.0,
+    "currency": "EUR",
+    "guest": {"id": "g-322", "first_name": "Jonas", "last_name": "Brandt",
+      "email": "jonas.brandt@example.com", "phone": "+49 151 0102030", "country": "DE",
+      "language": "de", "vip": false}
+  },
+  {
+    "id": "101", "external_ref": "HA-7006", "status": "confirmed",
+    "check_in": "2026-08-31", "check_out": "2026-09-03",
+    "room_type_id": "double", "room_type_name": "Double", "room_id": "101",
+    "adults": 2, "children": 0, "source": "Direct", "total": 360.0, "balance": 360.0,
+    "currency": "EUR",
+    "guest": {"id": "g-101", "first_name": "Elena", "last_name": "Popescu",
+      "email": "elena.popescu@example.com", "phone": "+1 555 0155", "country": "GB",
+      "language": "en", "vip": false}
+  },
+  {
+    "id": "233", "external_ref": "HA-7007", "status": "confirmed",
+    "check_in": "2026-08-29", "check_out": "2026-09-04",
+    "room_type_id": "twin", "room_type_name": "Twin", "room_id": "233",
+    "adults": 2, "children": 0, "source": "Direct", "total": 500.0, "balance": 500.0,
+    "currency": "EUR",
+    "guest": {"id": "g-233", "first_name": "Frankie", "last_name": "Osei",
+      "email": "frankie.osei@example.com", "phone": "+1 555 0166", "country": "GB",
+      "language": "en", "vip": false}
+  },
+  {
+    "id": "305", "external_ref": "HA-7008", "status": "confirmed",
+    "check_in": "2026-08-30", "check_out": "2026-09-01",
+    "room_type_id": "double", "room_type_name": "Double", "room_id": "305",
+    "adults": 1, "children": 0, "source": "Direct", "total": 220.0, "balance": 220.0,
+    "currency": "EUR",
+    "guest": {"id": "g-305", "first_name": "Haruto", "last_name": "Kimura",
+      "email": "haruto.kimura@example.com", "phone": "+1 555 0177", "country": "JP",
+      "language": "en", "vip": false}
+  },
+  {
+    "id": "415", "external_ref": "HA-7009", "status": "confirmed",
+    "check_in": "2026-08-27", "check_out": "2026-09-06",
+    "room_type_id": "suite", "room_type_name": "Suite", "room_id": "415",
+    "adults": 2, "children": 0, "source": "Direct", "total": 1800.0, "balance": 1800.0,
+    "currency": "EUR",
+    "guest": {"id": "g-415", "first_name": "Beatriz", "last_name": "Nogueira",
+      "email": "beatriz.nogueira@example.com", "phone": "+351 91 234 5678", "country": "PT",
+      "language": "pt", "vip": true}
+  },
+  {
+    "id": "108", "external_ref": "HA-7010", "status": "confirmed",
+    "check_in": "2026-08-30", "check_out": "2026-09-02",
+    "room_type_id": "double", "room_type_name": "Double", "room_id": "108",
+    "adults": 2, "children": 0, "source": "Direct", "total": 400.0, "balance": 400.0,
+    "currency": "EUR",
+    "guest": {"id": "g-108", "first_name": "Elin", "last_name": "Sandberg",
+      "email": "elin.sandberg@example.com", "phone": "+46 70 123 45 67", "country": "SE",
+      "language": "sv", "vip": false}
+  },
+  {
+    "id": "214", "external_ref": "HA-7011", "status": "confirmed",
+    "check_in": "2026-08-31", "check_out": "2026-09-03",
+    "room_type_id": "double", "room_type_name": "Double", "room_id": "214",
+    "adults": 2, "children": 0, "source": "Direct", "total": 400.0, "balance": 400.0,
+    "currency": "EUR",
+    "guest": {"id": "g-214", "first_name": "Rowan", "last_name": "Clarke",
+      "email": "rowan.clarke@example.com", "phone": "+1 555 0188", "country": "GB",
+      "language": "en", "vip": false}
+  },
+  {
+    "id": "341", "external_ref": "HA-7012", "status": "confirmed",
+    "check_in": "2026-08-29", "check_out": "2026-09-04",
+    "room_type_id": "twin", "room_type_name": "Twin", "room_id": "341",
+    "adults": 2, "children": 0, "source": "Direct", "total": 500.0, "balance": 500.0,
+    "currency": "EUR",
+    "guest": {"id": "g-341", "first_name": "Giulia", "last_name": "Ferraro",
+      "email": "giulia.ferraro@example.com", "phone": "+39 340 123 4567", "country": "IT",
+      "language": "it", "vip": false}
+  }
+]

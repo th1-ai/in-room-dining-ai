@@ -1,0 +1,9 @@
+{
+  "is_order": true,
+  "language": "de",
+  "items": [
+    {"slug": "fondant", "raw_text": "den Schokoladenfondant", "quantity": 1}
+  ],
+  "dietary_note": "eine Nussallergie",
+  "confidence": 0.9
+}

@@ -1,0 +1,10 @@
+{
+  "is_order": true,
+  "language": "en",
+  "items": [
+    {"slug": "club-sandwich", "raw_text": "a club sandwich", "quantity": 1},
+    {"slug": "sparkling-water", "raw_text": "a sparkling water", "quantity": 1}
+  ],
+  "dietary_note": "",
+  "confidence": 0.95
+}

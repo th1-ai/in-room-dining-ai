@@ -1,0 +1,10 @@
+{
+  "is_order": true,
+  "language": "pt",
+  "items": [
+    {"slug": "house-burger", "raw_text": "um hamburguer", "quantity": 1},
+    {"slug": "espresso", "raw_text": "um espresso", "quantity": 1}
+  ],
+  "dietary_note": "sem lactose, sou intolerante a lactose",
+  "confidence": 0.88
+}
